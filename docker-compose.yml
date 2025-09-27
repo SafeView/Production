@@ -1,0 +1,91 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: safeview-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-safeview}
+      MYSQL_USER: ${MYSQL_USER:-safeview}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-safeview}
+    ports:
+      - "3306:3306"
+    command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: safeview-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Spring DataSource override to use containerized MySQL
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE:-safeview}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-safeview}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-safeview}
+      # JWT and AI server
+      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+      AI_SERVER_URL: http://camera-ai:8000
+      # Backend expects this env variable per application.yml
+      AI_SERVER_API_KEY: ${AI_SERVER_API_KEY:-dev-ai-key}
+      # Optional: tune JVM
+      JAVA_OPTS: "-XX:+UseG1GC -XX:MaxRAMPercentage=75.0"
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+    volumes:
+      - ./services/backend/.env:/app/.env:ro
+
+  camera-ai:
+    build:
+      context: ./services/camera-ai
+      dockerfile: Dockerfile
+    container_name: safeview-camera-ai
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      # Point to backend inside compose network
+      BACKEND_API_URL: http://backend:8080
+      SPRING_MAKE_ENTITY_URL: http://backend:8080/api/videos/make-entity
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      AI_API_KEY: ${AI_SERVER_API_KEY:-dev-ai-key}
+      # S3 creds (optional)
+      # AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      # AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      # S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      # S3_REGION: ${S3_REGION}
+    ports:
+      - "8000:8000"
+    volumes:
+      - camera_uploads:/app/uploads
+      - camera_api_results:/app/api_results
+
+  frontend:
+    build:
+      context: ./services/frontend
+    container_name: safeview-frontend
+    depends_on:
+      - backend
+      - camera-ai
+    ports:
+      - "5173:80"
+
+volumes:
+  db_data:
+  camera_uploads:
+  camera_api_results:
+
+networks:
+  default:
+    name: safeview-net
