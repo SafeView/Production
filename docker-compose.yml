@@ -60,11 +60,10 @@ services:
       API_HOST: 0.0.0.0
       API_PORT: 8000
       AI_API_KEY: ${AI_SERVER_API_KEY:-dev-ai-key}
-      # S3 creds (optional)
-      # AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      # AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      # S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-      # S3_REGION: ${S3_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      S3_REGION: ${S3_REGION}
     ports:
       - "8000:8000"
     volumes:
