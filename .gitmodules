@@ -1,0 +1,9 @@
+[submodule "services/backend"]
+	path = services/backend
+	url = https://github.com/SafeView/Backend.git
+[submodule "services/frontend"]
+	path = services/frontend
+	url = https://github.com/SafeView/Frontend.git
+[submodule "services/camera-ai"]
+	path = services/camera-ai
+	url = https://github.com/SafeView/Camera_AI.git
