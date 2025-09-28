@@ -33,7 +33,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-safeview}
       # JWT / AI 서버
       JWT_SECRET: ${JWT_SECRET}
-      AI_SERVER_URL: http://localhost:8000
+      AI_SERVER_URL: http://camera-ai:8000
       AI_SERVER_API_KEY: ${AI_SERVER_API_KEY}
       EMAIL_USERNAME: ${EMAIL_USERNAME}
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
