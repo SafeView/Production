@@ -1,7 +1,7 @@
 [submodule "services/backend"]
 	path = services/backend
 	url = https://github.com/SafeView/Backend.git
-    branch = SAF-52-주석-정리-및-리팩토링
+    branch = dev2
 [submodule "services/frontend"]
 	path = services/frontend
 	url = https://github.com/SafeView/Frontend.git
