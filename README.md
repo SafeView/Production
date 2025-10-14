@@ -1,4 +1,6 @@
 # SafeView Production - Docker Orchestration
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSafeView%2FProduction.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FSafeView%2FProduction?ref=badge_shield)
+
 
 이 레포는 3개의 서비스(backend, camera-ai, frontend)와 MySQL DB를 docker-compose로 한 번에 실행하도록 구성되어 있습니다.
 
@@ -70,3 +72,7 @@ docker compose down
 - 카메라 AI가 백엔드에 접근 못할 때: `BACKEND_API_URL`이 `http://backend:8080`인지 확인.
 - CORS 에러 시: Backend CORS 설정을 확인하거나 필요 시 허용 도메인에 `http://localhost:5173` 추가.
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSafeView%2FProduction.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FSafeView%2FProduction?ref=badge_large)
