@@ -40,6 +40,10 @@ services:
       EMAIL_HOST: ${EMAIL_HOST}
       # JVM 튜닝 옵션
       JAVA_OPTS: "-XX:+UseG1GC -XX:MaxRAMPercentage=75.0"
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      S3_REGION: ${S3_REGION}
     ports:
       - "8080:8080"
     networks:
